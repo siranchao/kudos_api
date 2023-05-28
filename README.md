@@ -13,5 +13,5 @@
 
 # rpdu.rd.kudos.api
 
-REST API  for Kudos clone app
-Project remake using TypeScript and Express.js
+- REST API  for Kudos clone app
+- Project remake using TypeScript and Express.js
