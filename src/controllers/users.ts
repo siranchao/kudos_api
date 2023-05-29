@@ -30,6 +30,12 @@ export const deleteUser = async (req: express.Request, res: express.Response) =>
         const userId: string = req.params.id;
         const deletedUser: any = await deleteUserById(userId);
 
+        if(!deletedUser) {
+            return res.status(400).json({
+                message: 'Cannot find this user',
+            })
+        }
+
         return res.status(200).json({
             message: 'User deleted successfully',
             data: deletedUser
@@ -45,7 +51,7 @@ export const deleteUser = async (req: express.Request, res: express.Response) =>
 
 export const updateUser = async (req: express.Request, res: express.Response) => {
     try {
-        const { id } = req.params;
+        const id = req.params.id;
         const { username } = req.body;
         if(!username) {
             return res.status(400).json({
