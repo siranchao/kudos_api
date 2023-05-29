@@ -30,9 +30,15 @@ export const register = async (req: express.Request, res: express.Response) => {
             }
         })
 
-        return res.status(200).json({
-            message: 'New User created',
-        }).end();
+        if(newUser) {
+            return res.status(200).json({
+                message: 'New User created',
+            }).end();
+        } else {
+            return res.status(400).json({
+                message: 'Something went wrong when creating user'
+            })
+        }
 
     } catch(error) {
         console.log(error);

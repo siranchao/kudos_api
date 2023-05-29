@@ -25,18 +25,8 @@ export const getUserBySessionToken = (sessionToken: string) => UserModel.findOne
 
 
 //create user
-export const createUser = (user: any) => {
-    return new Promise((resolve, reject) => {
-        let newUser = new UserModel(user)
-        newUser.save()
-        .then(() => {
-            resolve(newUser);
-        })
-        .catch((err) => {
-            reject(err);
-        })
-    })
-}
+export const createUser = (user: any) => UserModel.create(user);
+
 
 //delete user
 export const deleteUser = (id: string) => {
