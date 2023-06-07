@@ -15,7 +15,7 @@ export const register = async (req: express.Request, res: express.Response) => {
         const user = await getUserByEmail(email);
         if(user) {
             return res.status(400).json({
-                message: 'User already exists'
+                message: 'This email already exists'
             })
         }
 
@@ -33,7 +33,6 @@ export const register = async (req: express.Request, res: express.Response) => {
         if(newUser) {
             return res.status(200).json({
                 message: 'New User created',
-                data: newUser
             }).end();
         } else {
             return res.status(400).json({
@@ -67,8 +66,8 @@ export const login = async (req: express.Request, res: express.Response) => {
             })
         }
 
-        const expectedPassword: string = authentication(user.authentication.salt, password);
-        if(expectedPassword !== user.authentication.password) {
+        const hashedPassword: string = authentication(user.authentication.salt, password);
+        if(hashedPassword !== user.authentication.password) {
             return res.status(403).json({
                 message: 'Incorrect password'
             })
