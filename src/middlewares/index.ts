@@ -4,20 +4,21 @@ import { getUserBySessionToken } from "../db/users";
 
 export const isAuthenticated = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
+        //check if user in session
         const sessionToken: any = req.cookies["cookie-name"];
         if(!sessionToken) {
             return res.status(401).json({
                 message: 'Unauthorized'
             })
         }
-
+        //check if session token is valid
         const user: any = await getUserBySessionToken(sessionToken);
         if(!user) {
             return res.status(401).json({
                 message: 'Unauthorized'
             })
         }
-
+        //merge user into request
         merge(req, {identity: user});
         return next();
 
