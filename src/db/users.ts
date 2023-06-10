@@ -6,7 +6,7 @@ const UserSchema: any = new mongoose.Schema({
     authentication: {
         password: {type: String, required: true, select: false},
         salt: {type: String, select: false},
-        sessionToken: {type: String, select: false}
+        //sessionToken: {type: String, select: false}
     }
 });
 
@@ -18,7 +18,11 @@ export const UserModel: any = mongoose.model('User', UserSchema);
 export const getUsers = () => UserModel.find({});
 export const getUserByEmail = (email: string) => UserModel.findOne({email});
 export const getUserById = (id: string) => UserModel.findById(id);
-export const getUserBySessionToken = (sessionToken: string) => UserModel.findOne({ 'authentication.sessionToken': sessionToken });
+
+//this method is disabled
+//export const getUserBySessionToken = (sessionToken: string) => UserModel.findOne({ 'authentication.sessionToken': sessionToken });
+
+
 
 //create user
 export const createUser = (user: any) => UserModel.create(user);

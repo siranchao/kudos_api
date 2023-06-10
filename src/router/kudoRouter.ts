@@ -6,10 +6,12 @@ import { getAllKudos, getOneKudo, createNewKudo, deleteOneKudo, updateLikes } fr
 const router: express.Router = express.Router();
 
 export default (): express.Router => {
-    
-    router.post("/newKudo", createNewKudo);
+
     router.get("/allKudos", getAllKudos);
     router.get("/oneKudo/:id", getOneKudo);
+
+    //protected routes    
+    router.post("/newKudo", isAuthenticated, createNewKudo);
     router.delete("/deleteKudo/:id", isAuthenticated, deleteOneKudo);
     router.patch("/updateLikes/:id", isAuthenticated, updateLikes);
 

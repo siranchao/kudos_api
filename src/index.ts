@@ -11,7 +11,7 @@ import kudoRouter from './router/kudoRouter';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
+const HTTP_PORT = process.env.PORT || 8080;
 const app: Express = express();
 
 app.use(cors({
@@ -24,8 +24,8 @@ app.use(bodyParser.json());
 
 const server: any = http.createServer(app);
 
-server.listen(8080, () => {
-    console.log('Server listening on port 8080: http://localhost:8080');
+server.listen(HTTP_PORT, () => {
+    console.log('Server listening on port: ' + HTTP_PORT);
 })
 
 //init mongoose

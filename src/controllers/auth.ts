@@ -1,6 +1,6 @@
 import express from "express";
 import { getUserByEmail, createUser } from "../db/users";
-import { random, authentication } from "../helpers/index";
+import { random, authentication, signJwtToken } from "../helpers/index";
 
 export const register = async (req: express.Request, res: express.Response) => {
     try {
@@ -69,20 +69,25 @@ export const login = async (req: express.Request, res: express.Response) => {
         const hashedPassword: string = authentication(user.authentication.salt, password);
         if(hashedPassword !== user.authentication.password) {
             return res.status(403).json({
-                message: 'Incorrect password'
+                message: 'Incorrect password',
+
             })
         }
 
-        const salt: string = random();
-        user.authentication.sessionToken = authentication(salt, user._id.toString());
+        /**
+         * generate random token for each session and set cookies. Not being used
+         */
+        // const salt: string = random();
+        // user.authentication.sessionToken = authentication(salt, user._id.toString());
+        // await user.save();
 
-        await user.save();
+        //set jwt token
+        const val: any = { id: user._id, email: user.email }
+        const accessToken = signJwtToken(val);
 
-        //set cookies
-        res.cookie('cookie-name', user.authentication.sessionToken, { domain: 'localhost', path: '/', httpOnly: true });
         return res.status(200).json({
             message: 'User logged in successfully',
-            data: user
+            data: {...val, accessToken}
         }).end();
 
     } catch(error) {
