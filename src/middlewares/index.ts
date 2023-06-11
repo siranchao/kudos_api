@@ -1,4 +1,5 @@
 import express from "express";
+import jwt from 'jsonwebtoken';
 import { get, merge } from "lodash";
 //import { getUserBySessionToken } from "../db/users";
 
@@ -6,30 +7,21 @@ import { get, merge } from "lodash";
 
 
 export const isAuthenticated = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const accessToken: string = req.headers.authorization;
+    if(!accessToken) {
+        return res.status(401).json({
+            message: 'Unauthorized, access token is missing'
+        })
+    }
+
     try {
-        // //check if user in session
-        // const sessionToken: any = req.cookies["cookie-name"];
-        // if(!sessionToken) {
-        //     return res.status(401).json({
-        //         message: 'Unauthorized'
-        //     })
-        // }
-        // //check if session token is valid
-        // const user: any = await getUserBySessionToken(sessionToken);
-        // if(!user) {
-        //     return res.status(401).json({
-        //         message: 'Unauthorized'
-        //     })
-        // }
-        // //merge user into request
-        // merge(req, {identity: user});
+        const decodedToken: any = jwt.verify(accessToken, process.env.SECRET);
+        merge(req, {user: decodedToken});
         return next();
 
     } catch (error) {
         console.log(error);
-        return res.status(400).json({
-            error: error
-        })
+        return res.status(401).json({ message: 'Invalid access token' });
     }
 }
 

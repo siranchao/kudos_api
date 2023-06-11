@@ -1,6 +1,6 @@
 import express from "express";
 import { register, login } from "../controllers/auth";
-import { getAllUsers, deleteUser, updateUser } from "../controllers/users";
+import { getAllUsers, updateUser } from "../controllers/users";
 import { isAuthenticated } from "../middlewares/index";
 
 const router: express.Router = express.Router();

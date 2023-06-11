@@ -82,7 +82,7 @@ export const login = async (req: express.Request, res: express.Response) => {
         // await user.save();
 
         //set jwt token
-        const val: any = { id: user._id, email: user.email }
+        const val: any = { id: user._id, name: user.username, email: user.email }
         const accessToken = signJwtToken(val);
 
         return res.status(200).json({
