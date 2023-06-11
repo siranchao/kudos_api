@@ -12,8 +12,9 @@ export default (): express.Router => {
 
     //protected routes    
     router.post("/newKudo", isAuthenticated, createNewKudo);
-    router.delete("/deleteKudo/:id", isAuthenticated, deleteOneKudo);
+    
     router.patch("/updateLikes/:id", isAuthenticated, updateLikes);
+    router.delete("/deleteKudo/:id", isAuthenticated, deleteOneKudo);
 
     return router;
 }

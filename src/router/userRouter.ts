@@ -9,6 +9,8 @@ export default (): express.Router => {
 
     router.post("/auth/register", register);
     router.post("/auth/login", login);
+
+    //protected routes   
     router.get("/allUsers", isAuthenticated, getAllUsers); 
     router.patch("/updateUser/:id", isAuthenticated, updateUser);
 

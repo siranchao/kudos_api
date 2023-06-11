@@ -51,9 +51,9 @@ export const getOneKudo = async (req: express.Request, res: express.Response) =>
 
 export const createNewKudo = async (req: express.Request, res: express.Response) => {
     try {
-        const { sender, receiver, message, kudoGif } = req.body;
+        const { sender, receiver, message, gif, identity } = req.body;
         
-        if(!sender || !receiver || !message || !kudoGif) {
+        if(!sender || !receiver || !message) {
             return res.status(400).json({
                 message: 'All fields are required'
             })
@@ -63,7 +63,8 @@ export const createNewKudo = async (req: express.Request, res: express.Response)
             sender,
             receiver,
             message,
-            kudoGif
+            gif,
+            author: identity.id
         })
 
         if(newKudo) {

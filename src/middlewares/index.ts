@@ -16,7 +16,7 @@ export const isAuthenticated = async (req: express.Request, res: express.Respons
 
     try {
         const decodedToken: any = jwt.verify(accessToken, process.env.SECRET);
-        merge(req, {user: decodedToken});
+        merge(req.body, {identity: decodedToken});
         return next();
 
     } catch (error) {
