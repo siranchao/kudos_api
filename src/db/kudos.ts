@@ -5,8 +5,8 @@ const KudoSchema: any = new mongoose.Schema({
     receiver: {type: Array, required: true},
     message: {type: Array, required: true},
     gif: {type: mongoose.Schema.Types.Mixed, default: null},
-    likes: {type: Number, default: 0},
-    people: {type: Array, default: []},
+    likes: {type: Array, default: []},
+    collects: {type: Array, default: []},
     author: {type: String, default: ""}
 },{
     timestamps: true

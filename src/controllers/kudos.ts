@@ -110,27 +110,159 @@ export const deleteOneKudo = async (req: express.Request, res: express.Response)
     }
 }
 
-export const updateLikes = async (req: express.Request, res: express.Response) => {
+export const likeKudo = async (req: express.Request, res: express.Response) => {
     try {
         const id: string = req.params.id;
-        const { likes } = req.body;
+        const userId: string = req.body.identity.id
 
-        if(!likes) {
+        if(!id || !userId) {
             return res.status(400).json({
                 message: 'All fields are required'
             })
         }
+        const kudo: any = await getKudoById(id);
 
-        const updatedKudo: any = await updateKudo(id, { likes })
+        if (!kudo.likes.includes(userId)) {
+            const value: string[] = kudo.likes;
+            value.push(userId);
 
-        if(updatedKudo) {
-            return res.status(200).json({
-                message: 'Kudo updated successfully',
-                data: updatedKudo
-            }).end();
+            const updatedKudo: any = await updateKudo(id, { likes: value })
+
+            if(updatedKudo) {
+                return res.status(200).json({
+                    message: 'Kudo updated successfully',
+                    data: updatedKudo
+                }).end();
+            } else {
+                return res.status(400).json({
+                    message: 'Something went wrong when updating kudo',
+                })
+            }
         } else {
             return res.status(400).json({
-                message: 'Something went wrong when updating kudo',
+                message: 'Kudo already liked'
+            })
+        }
+
+    } catch(error) {
+        console.log(error);
+        return res.status(400).json({
+            error: error
+        })
+    }
+}
+
+export const dislikeKudo = async (req: express.Request, res: express.Response) => {
+    try {
+        const id: string = req.params.id;
+        const userId: string = req.body.identity.id
+
+        if(!id || !userId) {
+            return res.status(400).json({
+                message: 'All fields are required'
+            })
+        }
+        const kudo: any = await getKudoById(id);
+
+        if (kudo.likes.includes(userId)) {
+            const value: string[] = kudo.likes.filter((item: string) => item !== userId);
+            const updatedKudo: any = await updateKudo(id, { likes: value })
+
+            if(updatedKudo) {
+                return res.status(200).json({
+                    message: 'Kudo updated successfully',
+                    data: updatedKudo
+                }).end();
+            } else {
+                return res.status(400).json({
+                    message: 'Something went wrong when updating kudo',
+                })
+            }
+        } else {
+            return res.status(400).json({
+                message: 'Kudo already disliked'
+            })
+        }
+
+    } catch(error) {
+        console.log(error);
+        return res.status(400).json({
+            error: error
+        })
+    }
+}
+
+export const collectKudo = async (req: express.Request, res: express.Response) => {
+    try {
+        const id: string = req.params.id;
+        const userId: string = req.body.identity.id
+
+        if(!id || !userId) {
+            return res.status(400).json({
+                message: 'All fields are required'
+            })
+        }
+        const kudo: any = await getKudoById(id);
+
+        if (!kudo.collects.includes(userId)) {
+            const value: string[] = kudo.collects;
+            value.push(userId);
+
+            const updatedKudo: any = await updateKudo(id, { collects: value })
+
+            if(updatedKudo) {
+                return res.status(200).json({
+                    message: 'Kudo updated successfully',
+                    data: updatedKudo
+                }).end();
+            } else {
+                return res.status(400).json({
+                    message: 'Something went wrong when updating kudo',
+                })
+            }
+        } else {
+            return res.status(400).json({
+                message: 'Kudo already liked'
+            })
+        }
+
+    } catch(error) {
+        console.log(error);
+        return res.status(400).json({
+            error: error
+        })
+    }
+}
+
+export const disCollectKudo = async (req: express.Request, res: express.Response) => {
+    try {
+        const id: string = req.params.id;
+        const userId: string = req.body.identity.id
+
+        if(!id || !userId) {
+            return res.status(400).json({
+                message: 'All fields are required'
+            })
+        }
+        const kudo: any = await getKudoById(id);
+
+        if (kudo.collects.includes(userId)) {
+            const value: string[] = kudo.collects.filter((item: string) => item !== userId);
+            const updatedKudo: any = await updateKudo(id, { collects: value })
+
+            if(updatedKudo) {
+                return res.status(200).json({
+                    message: 'Kudo updated successfully',
+                    data: updatedKudo
+                }).end();
+            } else {
+                return res.status(400).json({
+                    message: 'Something went wrong when updating kudo',
+                })
+            }
+        } else {
+            return res.status(400).json({
+                message: 'Kudo already liked'
             })
         }
 
