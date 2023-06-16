@@ -23,18 +23,6 @@ app.use((0, compression_1.default)());
 app.use((0, cookie_parser_1.default)());
 app.use(body_parser_1.default.json());
 const server = http_1.default.createServer(app);
-server.listen(HTTP_PORT, () => {
-    console.log('Server listening on port: ' + HTTP_PORT);
-});
-//init mongoose
-mongoose_1.default.Promise = Promise;
-mongoose_1.default.connect(process.env.MONGO_URL);
-mongoose_1.default.connection.on('error', (err) => {
-    console.error('MongoDB connection error:', err);
-});
-mongoose_1.default.connection.once('open', () => {
-    console.log('Connected to MongoDB successfully');
-});
 //configure routes
 app.get('/', (req, res) => {
     res.status(200).json({
@@ -43,4 +31,15 @@ app.get('/', (req, res) => {
 });
 app.use('/api/user', (0, userRouter_1.default)());
 app.use('/api/kudo', (0, kudoRouter_1.default)());
+//init mongoose
+mongoose_1.default.Promise = Promise;
+mongoose_1.default.connect(process.env.MONGO_URL).then(() => {
+    console.log('Database connected');
+    server.listen(HTTP_PORT, () => {
+        console.log('Server listening on port: ' + HTTP_PORT);
+    });
+}).catch((err) => {
+    console.error(err);
+    process.exit();
+});
 //# sourceMappingURL=index.js.map

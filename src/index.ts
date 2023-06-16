@@ -24,22 +24,6 @@ app.use(bodyParser.json());
 
 const server: any = http.createServer(app);
 
-server.listen(HTTP_PORT, () => {
-    console.log('Server listening on port: ' + HTTP_PORT);
-})
-
-//init mongoose
-mongoose.Promise = Promise;
-mongoose.connect(process.env.MONGO_URL);
-
-mongoose.connection.on('error', (err: Error) => {
-    console.error('MongoDB connection error:', err);
-});
-mongoose.connection.once('open', () => {
-    console.log('Connected to MongoDB successfully');
-});
-
-
 //configure routes
 app.get('/', (req, res) => {
     res.status(200).json({
@@ -49,3 +33,19 @@ app.get('/', (req, res) => {
 
 app.use('/api/user', userRouter());
 app.use('/api/kudo', kudoRouter());
+
+
+
+//init mongoose
+mongoose.Promise = Promise;
+mongoose.connect(process.env.MONGO_URL).then(() => {
+    console.log('Database connected');
+    
+    server.listen(HTTP_PORT, () => {
+        console.log('Server listening on port: ' + HTTP_PORT);
+    })
+}).catch((err: Error) => {
+    console.error(err);
+    process.exit();
+})
+
