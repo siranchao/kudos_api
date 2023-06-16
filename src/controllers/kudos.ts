@@ -4,7 +4,7 @@ import { getKudos, getKudoById, createKudo, deleteKudo, updateKudo } from "../db
 
 export const getAllKudos = async (req: express.Request, res: express.Response) => {
     try {
-        const allKudos: any = await getKudos();
+        const allKudos: any[] = await getKudos();
 
         if(allKudos) {
             return res.status(200).json({
@@ -18,6 +18,35 @@ export const getAllKudos = async (req: express.Request, res: express.Response) =
         }
 
     } catch(error) {
+        console.log(error);
+        return res.status(400).json({
+            error: error
+        })
+    }
+}
+
+export const getKudosKpi = async (req: express.Request, res: express.Response) => {
+    try {
+        const kudos: any[] = await getKudos();
+        const total: number = kudos.length;
+        let recent: number = 0;
+        const today: Date = new Date();
+
+        if (kudos.length === 0) {
+            return res.status(400).json({
+                message: 'Kudo list is empty',
+            })
+        }
+
+        for(const kudo of kudos) {
+            if((today.getTime() - new Date(kudo.createdAt).getTime()) / (1000 * 60 * 60 * 24) <= 30 ) {
+                recent++;
+            }
+        }
+
+        return res.status(200).json({total,recent})
+
+    } catch (error) {
         console.log(error);
         return res.status(400).json({
             error: error
@@ -42,6 +71,52 @@ export const getOneKudo = async (req: express.Request, res: express.Response) =>
         }
 
     } catch(error) {
+        console.log(error);
+        return res.status(400).json({
+            error: error
+        })
+    }
+}
+
+export const myKudos = async (req: express.Request, res: express.Response) => {
+    try {
+        const userId: string = req.body.identity.id;
+        const userName: string = req.body.identity.name;
+        const allKudos: any[] = await getKudos();
+
+        if(!allKudos) {
+            return res.status(400).json({
+                message: 'Something went wrong when fetching kudos',
+            })
+        }
+
+        const sent: any[] = allKudos.filter((kudo: any) => {
+            return kudo.author === userId
+        })
+
+        const received: any[] = allKudos.filter((kudo: any) => {
+            return kudo.receiver.includes(userName)
+        })
+
+        const liked: any[] = allKudos.filter((kudo: any) => {
+            return kudo.likes.includes(userId)
+        })
+
+        const collected: any[] = allKudos.filter((kudo: any) => {
+            return kudo.collects.includes(userId)
+        })
+
+        return res.status(200).json({
+            message: 'My Kudos fetched successfully',
+            data: {
+                sent,
+                received,
+                liked,
+                collected
+            }
+        }).end();
+
+    } catch (error) {
         console.log(error);
         return res.status(400).json({
             error: error
